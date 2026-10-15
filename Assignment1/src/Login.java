@@ -9,7 +9,10 @@ public class Login {
     }
 
     public boolean verifyPassword(String password) {
-        return false; // TODO
+        if (password == null) {
+            return false;
+        }
+        return password.matches("\\d{4,6}");
     }
 
     public boolean login(String username, String password) {
