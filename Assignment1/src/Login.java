@@ -1,14 +1,18 @@
 public class Login {
 
     public boolean verifyUserName(String username) {
-        throw new RuntimeException("No Product Written Yet"); // TODO: Implement
+        if (username == null) {
+            return false;
+        }
+        int length = username.length();
+        return length >= 6 && length <= 12;
     }
 
     public boolean verifyPassword(String password) {
-        throw new RuntimeException("No Product Written Yet"); // TODO: Implement
+        return false; // TODO
     }
 
     public boolean login(String username, String password) {
-        throw new RuntimeException("No Product Written Yet"); // TODO: Implement
+        return false; // TODO
     }
 }
