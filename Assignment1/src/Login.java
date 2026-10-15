@@ -16,6 +16,6 @@ public class Login {
     }
 
     public boolean login(String username, String password) {
-        return false; // TODO
+    	return verifyUserName(username) && verifyPassword(password);
     }
 }
