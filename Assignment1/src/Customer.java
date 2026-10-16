@@ -25,10 +25,13 @@ public class Customer {
     // ===== Validation (TDD - not written yet) =====
 
     /** First name must be 1 to 50 characters (not blank). */
-    public boolean verifyFirstName(String firstName) {
-        throw new RuntimeException("No Product Written Yet"); // TODO: Implement
+   public boolean verifyFirstName(String firstName) {
+       if (firstName == null) {
+           return false;
+       }
+       String trimmed = firstName.trim();
+       return trimmed.length() >= 1 && firstName.length() <= 50;
     }
-
     /** Surname must be 1 to 50 characters (not blank). */
     public boolean verifySurname(String surname) {
         throw new RuntimeException("No Product Written Yet"); // TODO: Implement
