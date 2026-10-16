@@ -52,7 +52,10 @@ public class Customer {
 
     /** Phone number must be exactly 10 digits and start with 0. */
     public boolean verifyPhoneNumber(String phoneNumber) {
-        throw new RuntimeException("No Product Written Yet"); // TODO: Implement
+    	if (phoneNumber == null) {
+            return false;
+        }
+        return phoneNumber.matches("0\\d{9}");
     }
 
     /** Delivery area must be between 1 and 24. */
