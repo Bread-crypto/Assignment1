@@ -34,12 +34,20 @@ public class Customer {
     }
     /** Surname must be 1 to 50 characters (not blank). */
     public boolean verifySurname(String surname) {
-        throw new RuntimeException("No Product Written Yet"); // TODO: Implement
+    	if (surname == null) {
+            return false;
+        }
+        String trimmed = surname.trim();
+        return trimmed.length() >= 1 && surname.length() <= 50;
     }
 
     /** Address must be 1 to 100 characters (not blank). */
     public boolean verifyAddress(String address) {
-        throw new RuntimeException("No Product Written Yet"); // TODO: Implement
+    	if (address == null) {
+            return false;
+        }
+        String trimmed = address.trim();
+        return trimmed.length() >= 1 && address.length() <= 100;
     }
 
     /** Phone number must be exactly 10 digits and start with 0. */
