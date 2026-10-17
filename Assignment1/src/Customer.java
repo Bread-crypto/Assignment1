@@ -22,32 +22,20 @@ public class Customer {
         this.deliveryAreaId = deliveryAreaId;
     }
 
-    // ===== Validation (TDD - not written yet) =====
+    // ===== Validation =====
 
     /** First name must be 1 to 50 characters (not blank). */
    public boolean verifyFirstName(String firstName) {
-       if (firstName == null) {
-           return false;
-       }
-       String trimmed = firstName.trim();
-       return trimmed.length() >= 1 && firstName.length() <= 50;
+	   return isValidText(firstName, 50);
     }
     /** Surname must be 1 to 50 characters (not blank). */
     public boolean verifySurname(String surname) {
-    	if (surname == null) {
-            return false;
-        }
-        String trimmed = surname.trim();
-        return trimmed.length() >= 1 && surname.length() <= 50;
+    	return isValidText(surname, 50);
     }
 
     /** Address must be 1 to 100 characters (not blank). */
     public boolean verifyAddress(String address) {
-    	if (address == null) {
-            return false;
-        }
-        String trimmed = address.trim();
-        return trimmed.length() >= 1 && address.length() <= 100;
+    	return isValidText(address, 100);
     }
 
     /** Phone number must be exactly 10 digits and start with 0. */
@@ -80,6 +68,13 @@ public class Customer {
             return true;
         }
         return false;
+    }
+    
+    /** Shared rule: text must not be null or blank, and not longer than maxLength. */
+    private boolean isValidText(String value, int maxLength) {
+        return value != null
+            && !value.trim().isEmpty()
+            && value.length() <= maxLength;
     }
 
     // ===== Getters and setters =====
