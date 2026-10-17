@@ -66,7 +66,20 @@ public class Customer {
     /** Creates the account only if every detail is valid. */
     public boolean createCustomerAccount(String firstName, String surname, String address,
                                          String phoneNumber, int deliveryAreaId) {
-        throw new RuntimeException("No Product Written Yet"); // TODO: Implement
+    	if (verifyFirstName(firstName)
+                && verifySurname(surname)
+                && verifyAddress(address)
+                && verifyPhoneNumber(phoneNumber)
+                && verifyDeliveryArea(deliveryAreaId)) {
+
+            this.firstName = firstName;
+            this.surname = surname;
+            this.address = address;
+            this.phoneNumber = phoneNumber;
+            this.deliveryAreaId = deliveryAreaId;
+            return true;
+        }
+        return false;
     }
 
     // ===== Getters and setters =====
