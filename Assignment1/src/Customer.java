@@ -60,7 +60,7 @@ public class Customer {
 
     /** Delivery area must be between 1 and 24. */
     public boolean verifyDeliveryArea(int deliveryAreaId) {
-        throw new RuntimeException("No Product Written Yet"); // TODO: Implement
+    	return deliveryAreaId >= 1 && deliveryAreaId <= 24;
     }
 
     /** Creates the account only if every detail is valid. */
