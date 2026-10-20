@@ -1,0 +1,162 @@
+
+===== CUSTOMER MANAGEMENT MENU =====
+1. Add Customer
+2. Find Customer By ID
+3. Search Customers By Surname
+4. List All Customers
+5. Update Customer
+6. Close Customer Account
+0. Exit
+Choose an option: 1
+=== Create New Customer ===
+First Name: John
+Surname: Smith
+Address: 5 Main St, Athlone
+Phone Number: 0871234567
+Delivery Area (1-24): 3
+Customer account created successfully.
+
+===== CUSTOMER MANAGEMENT MENU =====
+1. Add Customer
+2. Find Customer By ID
+3. Search Customers By Surname
+4. List All Customers
+5. Update Customer
+6. Close Customer Account
+0. Exit
+Choose an option: 1
+=== Create New Customer ===
+First Name: 
+Surname: Smith
+Address: 5 Main St
+Phone Number: 087123
+Delivery Area (1-24): 30
+Error: Invalid First Name (1-50 characters)
+Error: Invalid Phone Number (10 digits, starts with 0)
+Error: Invalid Delivery Area (1-24)
+Customer account not created.
+
+===== CUSTOMER MANAGEMENT MENU =====
+1. Add Customer
+2. Find Customer By ID
+3. Search Customers By Surname
+4. List All Customers
+5. Update Customer
+6. Close Customer Account
+0. Exit
+Choose an option: 1
+=== Create New Customer ===
+First Name: John
+Surname: Smith
+Address: 5 Main St, Athlone
+Phone Number: 0871234567
+Delivery Area (1-24): 3
+Customer account created successfully.
+
+===== CUSTOMER MANAGEMENT MENU =====
+1. Add Customer
+2. Find Customer By ID
+3. Search Customers By Surname
+4. List All Customers
+5. Update Customer
+6. Close Customer Account
+0. Exit
+Choose an option: 4
+ID   First Name      Surname         Address                   Phone       Area  Status 
+1    John            Smith           5 Main St, Athlone        0871234567  3     ACTIVE 
+2    John            Smith           5 Main St, Athlone        0871234567  3     ACTIVE 
+
+===== CUSTOMER MANAGEMENT MENU =====
+1. Add Customer
+2. Find Customer By ID
+3. Search Customers By Surname
+4. List All Customers
+5. Update Customer
+6. Close Customer Account
+0. Exit
+Choose an option: 2
+Customer ID: 1
+Customer ID: 1
+First Name: John
+Surname: Smith
+Address: 5 Main St, Athlone
+Phone Number: 0871234567
+Delivery Area: 3
+Status: ACTIVE
+
+===== CUSTOMER MANAGEMENT MENU =====
+1. Add Customer
+2. Find Customer By ID
+3. Search Customers By Surname
+4. List All Customers
+5. Update Customer
+6. Close Customer Account
+0. Exit
+Choose an option: 3
+Surname: Smith
+ID   First Name      Surname         Address                   Phone       Area  Status 
+1    John            Smith           5 Main St, Athlone        0871234567  3     ACTIVE 
+2    John            Smith           5 Main St, Athlone        0871234567  3     ACTIVE 
+
+===== CUSTOMER MANAGEMENT MENU =====
+1. Add Customer
+2. Find Customer By ID
+3. Search Customers By Surname
+4. List All Customers
+5. Update Customer
+6. Close Customer Account
+0. Exit
+Choose an option: 5
+Customer ID to update: 2
+Current details:
+Customer ID: 2
+First Name: John
+Surname: Smith
+Address: 5 Main St, Athlone
+Phone Number: 0871234567
+Delivery Area: 3
+Status: ACTIVE
+Press Enter to keep the current value.
+First Name [John]: 
+Surname [Smith]: 
+Address [5 Main St, Athlone]: 12 Church Rd
+Phone Number [0871234567]: 
+Delivery Area (1-24) [3]: 
+Customer updated successfully.
+
+===== CUSTOMER MANAGEMENT MENU =====
+1. Add Customer
+2. Find Customer By ID
+3. Search Customers By Surname
+4. List All Customers
+5. Update Customer
+6. Close Customer Account
+0. Exit
+Choose an option: 6
+Customer ID to close: 2
+Close account of John Smith? (y/n): y
+Customer account closed.
+
+===== CUSTOMER MANAGEMENT MENU =====
+1. Add Customer
+2. Find Customer By ID
+3. Search Customers By Surname
+4. List All Customers
+5. Update Customer
+6. Close Customer Account
+0. Exit
+Choose an option: 4
+ID   First Name      Surname         Address                   Phone       Area  Status 
+1    John            Smith           5 Main St, Athlone        0871234567  3     ACTIVE 
+2    John            Smith           12 Church Rd              0871234567  3     CLOSED 
+
+===== CUSTOMER MANAGEMENT MENU =====
+1. Add Customer
+2. Find Customer By ID
+3. Search Customers By Surname
+4. List All Customers
+5. Update Customer
+6. Close Customer Account
+0. Exit
+Choose an option: 0
+Goodbye.
