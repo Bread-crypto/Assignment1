@@ -12,6 +12,11 @@ public class HolidayDAO {
     // The start date must be today or in the future.
     // The end date must be on or after the start date.
     public boolean addHoliday(Holiday holiday) {
+    	
+    	// Reject a missing holiday object.
+    	if (holiday == null) {
+    	    return false;
+    	}
 
         // Validate the holiday dates before accessing the database.
         if (holiday.getHolidayStartDate() == null
@@ -47,8 +52,8 @@ public class HolidayDAO {
             return stmt.executeUpdate() > 0;
 
         } catch (SQLException e) {
-            // Report database errors and indicate the operation failed.
-            e.printStackTrace();
+            // Report database errors without printing a full stack trace.
+            System.out.println("Unable to save holiday: " + e.getMessage());
             return false;
         }
     }
@@ -80,7 +85,7 @@ public class HolidayDAO {
 
         } catch (SQLException e) {
             // Report database errors.
-            e.printStackTrace();
+            System.out.println("Unable to retrieve holidays: " + e.getMessage());
         }
 
         return holidays;
