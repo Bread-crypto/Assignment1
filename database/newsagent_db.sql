@@ -47,6 +47,26 @@ CREATE TABLE IF NOT EXISTS DeliveryAreaTable (
     FOREIGN KEY (deliveryPersonId)
         REFERENCES DeliveryPersonTable(deliveryPersonId)
 );
+
+
+
+-- ---------------------------------------------
+-- Daily Delivery Docket (Ahmed) - User Story 11
+-- ---------------------------------------------
+
+CREATE TABLE IF NOT EXISTS DeliveryDocketTable (
+    docketId INT AUTO_INCREMENT PRIMARY KEY,
+    docketDate DATE NOT NULL,
+    deliveryAreaId INT NOT NULL,
+    deliveryPersonId INT NOT NULL,
+
+    FOREIGN KEY (deliveryAreaId)
+        REFERENCES DeliveryAreaTable(deliveryAreaId),
+
+    FOREIGN KEY (deliveryPersonId)
+        REFERENCES DeliveryPersonTable(deliveryPersonId)
+);
+
 -- -----------------------------------------------------
 -- Orders + Holidays (Patrick) - User Stories 2, 3, 4, 5, 6
 -- -----------------------------------------------------
