@@ -29,9 +29,24 @@ CREATE TABLE IF NOT EXISTS CustomerTable (
 -- -----------------------------------------------------
 -- Delivery Area + Delivery Person (Ahmed) - User Stories 17, 32, 12
 -- -----------------------------------------------------
--- CREATE TABLE IF NOT EXISTS DeliveryAreaTable ( ... );
--- CREATE TABLE IF NOT EXISTS DeliveryPersonTable ( ... );
+CREATE TABLE IF NOT EXISTS DeliveryPersonTable (
+    deliveryPersonId INT AUTO_INCREMENT PRIMARY KEY,
+    firstName VARCHAR(50) NOT NULL,
+    surname VARCHAR(50) NOT NULL,
+    phoneNumber VARCHAR(10) NOT NULL,
+    status VARCHAR(10) NOT NULL DEFAULT 'ACTIVE'
+);
+-- -----------------------------------------------------
+-- Delivery Area + Delivery Person (Ahmed) - User Stories 17,12
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS DeliveryAreaTable (
+    deliveryAreaId INT AUTO_INCREMENT PRIMARY KEY,
+    areaName VARCHAR(30) NOT NULL UNIQUE,
+    deliveryPersonId INT,
 
+    FOREIGN KEY (deliveryPersonId)
+        REFERENCES DeliveryPersonTable(deliveryPersonId)
+);
 -- -----------------------------------------------------
 -- Orders + Holidays (Patrick) - User Stories 2, 3, 4, 5, 6
 -- -----------------------------------------------------
