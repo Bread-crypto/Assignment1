@@ -85,11 +85,19 @@ public class DeliveryDocketGenerator {
         // Supports comma-separated full weekday names
         String[] days = deliveryDays.split(",");
 
-        for (String day : days) {
-            if (day.trim().equalsIgnoreCase(weekday)) {
-                return true;
-            }
-        }
+
+for (String day : days) {
+
+    String normalized = day.trim()
+            .toUpperCase(java.util.Locale.ROOT);
+
+    if (normalized.equals(weekday)
+            || (normalized.length() == 3
+                && weekday.startsWith(normalized))) {
+        return true;
+    }
+}
+
 
         return false;
     }

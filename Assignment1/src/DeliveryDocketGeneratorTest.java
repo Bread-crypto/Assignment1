@@ -385,10 +385,54 @@ public class DeliveryDocketGeneratorTest {
 
         assertTrue(summary.contains("No deliveries recorded"));
     }
+    
 
+    // US11 - Accept Patrick's abbreviated delivery days
+    @Test
+    public void testAbbreviatedOrderDeliveryDays() {
 
+        Order order = new Order(
+                1, 1, 10, "Mon,Wed,Fri",
+                LocalDate.of(2026, 11, 1),
+                LocalDate.of(2026, 11, 30));
 
+        DeliveryDocketGenerator generator =
+                new DeliveryDocketGenerator();
 
+        // Monday - delivery expected
+        assertTrue(generator.isOrderDueOnDay(
+                order, LocalDate.of(2026, 11, 16)));
+
+        // Tuesday - no delivery expected
+        assertFalse(generator.isOrderDueOnDay(
+                order, LocalDate.of(2026, 11, 17)));
+    }
+    
+
+    // US11 - Patrick's abbreviated weekday format
+    @Test
+    public void testAbbreviatedDeliveryDays() {
+
+        Order order = new Order(
+                1, 1, 10, "Mon,Wed,Fri",
+                LocalDate.of(2026, 11, 1),
+                LocalDate.of(2026, 11, 30));
+
+        DeliveryDocketGenerator generator =
+                new DeliveryDocketGenerator();
+
+        // Monday: delivery required
+        assertTrue(generator.isOrderDueOnDay(
+                order, LocalDate.of(2026, 11, 16)));
+
+        // Tuesday: no delivery required
+        assertFalse(generator.isOrderDueOnDay(
+                order, LocalDate.of(2026, 11, 17)));
+
+        // Wednesday: delivery required
+        assertTrue(generator.isOrderDueOnDay(
+                order, LocalDate.of(2026, 11, 18)));
+    }
 
 
 
