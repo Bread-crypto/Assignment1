@@ -21,26 +21,51 @@ public class Bill {
         this.billingMonth = billingMonth;
     }
 
-    // ===== Validation and logic (TDD - not written yet) =====
+    // ===== Validation and logic =====
 
     /** Billing month must be 1-12 and not in the future (US 19, 28). */
     public boolean verifyBillingMonth(int year, int month) {
-        throw new RuntimeException("Not implemented yet");
+    	if (month < 1 || month > 12) {
+    	    return false;
+    	}
+    	LocalDate today = LocalDate.now();
+    	if (year > today.getYear()) {
+    	    return false;
+    	}
+    	if (year == today.getYear() && month > today.getMonthValue()) {
+    	    return false;
+    	}
+    	return true;
     }
 
     /** Total = sum of the prices of all DELIVERED items; 0.00 if none (US 19). */
     public double calculateTotal(double[] prices) {
-        throw new RuntimeException("Not implemented yet");
+    	double total = 0.0;
+    	if (prices != null) {
+    	    for (double price : prices) {
+    	        total = total + price;
+    	    }
+    	}
+    	this.totalAmount = total;
+    	return total;
     }
 
     /** Payment date must be today or a past date (US 21). */
     public boolean verifyPaymentDate(LocalDate paymentDate) {
-        throw new RuntimeException("Not implemented yet");
+    	return paymentDate != null && !paymentDate.isAfter(LocalDate.now());
     }
 
     /** Marks an UNPAID bill as PAID; a PAID bill cannot be paid again (US 21). */
     public boolean recordPayment(LocalDate paymentDate) {
-        throw new RuntimeException("Not implemented yet");
+    	if (billStatus.equals("PAID")) {
+    	    return false;
+    	}
+    	if (!verifyPaymentDate(paymentDate)) {
+    	    return false;
+    	}
+    	this.billStatus = "PAID";
+    	this.paymentDate = paymentDate;
+    	return true;
     }
 
     // ===== Getters and setters =====
