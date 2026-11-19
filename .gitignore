@@ -7,3 +7,7 @@ bin/
 
 # generated bill files
 bill_*.txt
+
+# Claude app output folder
+Claude outputs/
+dockets/

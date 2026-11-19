@@ -33,7 +33,6 @@ public class PublicationCLI {
                 default: System.out.println("Invalid option.");
             }
         }
-        scanner.close();
     }
 
     private void addPublication() {
