@@ -1,222 +1,592 @@
+
 # News Agent Delivery System
 
-Software Engineering 3 – Team Assignment (TUS, 2026)
+**Software Engineering 3 — Team Assignment | TUS Athlone | 2026**
 
-A console application that helps a newsagent manage newspaper and magazine deliveries in a local area: customers, orders, publications and stock, delivery areas, daily delivery dockets and monthly bills.
+A Java console application for managing a local newsagent's customers, publications, subscriptions, delivery areas, daily delivery dockets and monthly billing.
 
----
+The project uses Java, Eclipse, JUnit 5, MySQL and GitHub, following an Agile Scrum development approach with Test-Driven Development (TDD).
 
-## 📌 Now: Sprint 3 (Week 9–10, 2 – 13 Nov)
+> **Project Status — 19 November 2026:** The integrated application is available in `master` following Pull Request #8. Customer Management, Delivery Areas and People, Billing, Delivery Dockets and Daily Reporting are implemented. Publication and Order Management from Wave 1 are also integrated. Patrick's delivery recording and Dylan's additional stock/history functionality from Wave 2 are pending final integration. Demonstration delivery records are provided through SQL test data.
 
-1. **Wave 1 carry-over:** Publication (Dylan) and Orders (Patrick) need a pull request open by **Sun 8 Nov, 23:59**. Billing and dockets depend on them.
-2. **Wave 2:** everyone starts **now**. Don't wait for the other branches:
-   - `Team → Switch To → master → Pull → New Branch… feature/<area>`
-   - When the missing Wave 1 PRs are merged: `Team → Fetch from origin → Merge → origin/master` on your branch.
-3. Use table and column names **exactly** as listed below, so code written in parallel fits together.
+## 1. Project Overview
 
----
+The News Agent Delivery System is designed to support the daily operations of a local newspaper and magazine delivery business.
 
-## Sprint plan
+The application allows a newsagent to:
 
-Scrum with one sprint per 1–3 weeks. The **sprint review** happens at the weekly practical with Mike, and the next week's workload is agreed there.
+- Manage customer accounts and delivery areas.
+- Manage newspapers, magazines and stock.
+- Create and maintain customer subscriptions.
+- Record customer holidays.
+- Generate daily delivery dockets.
+- View delivery status and daily reports.
+- Generate monthly customer bills.
+- Record payments and monitor outstanding balances.
 
-| Sprint | Weeks | Dates | Length | Goal | Status |
-|---|---|---|---|---|---|
-| 0 | 2–3 | 14 Sep – 25 Sep | 2 weeks | SDLC justification, team repo, interview questions for the newsagent | ✅ Done |
-| 1 | 4 | 28 Sep – 2 Oct | 1 week | 32 user stories + acceptance criteria, project plan | ✅ Done |
-| 2 | 5–7 | 5 Oct – 23 Oct | 3 weeks | TDD example (Login), **Wave 1** – core entities up to CLI | ⚠️ 2 of 4 entities done |
-| – | 8 | 26 Oct – 30 Oct | – | Reading week (no sprint) | – |
-| **3** | **9–10** | **2 Nov – 13 Nov** | **2 weeks** | **Finish Wave 1 + Wave 2** – dockets, deliveries, billing | 🔄 In progress |
-| 4 | 11 | 16 Nov – 20 Nov | 1 week | Integration: one main menu, foreign keys, UAT, bug fixes | ⏳ Planned |
-| 5 | 12 | 23 Nov – 27 Nov | 1 week | Final testing, documentation, individual reflections, submission | ⏳ Planned |
+The application is implemented as a Java console system with a shared MySQL database.
 
-### Pipeline – the same for every story (Mike's Customer example)
+## 2. Team Responsibilities
 
-```
-User story → Test cases (Test Design Template) → Class skeleton → JUnit tests (RED)
-→ Implement (GREEN) → Refactor → SQL table → DAO → CLI menu → UAT
-```
-
----
-
-## Sprint 2 – Wave 1: core entities (17 stories)
-
-| Who | Entity | Stories | Table + columns | Status |
-|---|---|---|---|---|
-| Rodion | Customer | 1, 26, 7 | `CustomerTable`: customerId, firstName, surname, address, phoneNumber, deliveryAreaId, status | ✅ Done (26 JUnit tests, DAO, CLI, UAT) |
-| Ahmed | Delivery Area + Delivery Person | 17, 32, 12 | `DeliveryAreaTable`: deliveryAreaId, areaName, deliveryPersonId<br>`DeliveryPersonTable`: deliveryPersonId, firstName, surname, phoneNumber, status | ✅ Done |
-| Dylan | Publication + stock | 27, 29, 31, 8, 9, 10 | `PublicationTable`: publicationId, publicationName, publicationType, publicationPrice, stockQuantity, lowStockThreshold, publicationFrequency, releaseDay | ⚠️ Carried over → PR by Sun 8 Nov |
-| Patrick | Orders + holidays | 2, 5, 6, 4, 3 | `OrderTable`: orderId, customerId, publicationId, deliveryDays, orderStartDate, orderEndDate<br>`HolidayTable`: holidayId, customerId, holidayStartDate, holidayEndDate | ⚠️ Carried over → PR by Sun 8 Nov |
-
-**Sprint 2 retrospective:** two of the four entities were not finished on time.
-- **Cause:** work started late and nobody raised a blocker.
-- **Change for Sprint 3:**
-  - every member pushes at least once by **Wednesday** of each week;
-  - anyone stuck says so in the group chat on the **same day**.
-
----
-
-## Sprint 3 – Week 9–10: Wave 2 (15 stories) – 2 Nov to 13 Nov
-
-Estimates are in hours of work per person and are based on the number of acceptance criteria per story.
-
-| Who | Area | Stories | Depends on | Estimate | Deadline |
-|---|---|---|---|---|---|
-| Rodion | Billing | 19, 20, 21, 22, 28 (25 Login ✅) | Customer ✅, Orders, Publication price | ~14 h | Fri 13 Nov |
-| Ahmed | Delivery dockets + daily summary | 11, 16, 18, 30 | Delivery Area ✅, Orders, Customer ✅ | ~11 h | Fri 13 Nov |
-| Dylan | Stock on dockets + delivery history | 13, 24, 23 | Publication, dockets | ~8 h (+ Wave 1 finish) | Fri 13 Nov |
-| Patrick | Recording deliveries | 14, 15 | dockets | ~6 h (+ Wave 1 ~12 h) | Fri 13 Nov |
-
-### Order of work inside the sprint
-
-| Days | Step | Time |
-|---|---|---|
-| Mon 9 – Tue 10 Nov | Test Design for your stories + class skeleton + JUnit tests → **screenshot RED** → commit | ~3 h |
-| Wed 11 Nov | Implement method by method → **screenshot GREEN** → refactor → commit + push | ~3 h |
-| Thu 12 Nov | `CREATE TABLE` in `database/newsagent_db.sql` + DAO | ~3 h |
-| Fri 13 Nov | CLI menu + UAT notes → pull request | ~2 h |
-
-Steps that need someone else's table (for example a bill needs orders and prices) are written against the column names in this README. They are tested once that PR is merged.
-
----
-
-## Sprint 4 – Week 11: Integration (16 Nov – 20 Nov)
-
-| Task | Owner | Estimate |
-|---|---|---|
-| One main menu (`MainMenu.java`) that opens every entity's CLI | Rodion | 3 h |
-| Foreign keys in `newsagent_db.sql` (Customer → DeliveryArea, Order → Customer/Publication, …) | Ahmed | 2 h |
-| UAT for your own stories → `tests/<Entity> UAT results.txt` | Everyone | 2 h each |
-| Bug fixes from UAT, all JUnit tests green on `master` | Everyone | 2 h each |
-
-## Sprint 5 – Week 12: Finish (23 Nov – 27 Nov)
-
-| Task | Owner | Estimate |
-|---|---|---|
-| Final full regression test (all JUnit + UAT) | Everyone | 2 h |
-| Update README, test documents, user stories status | Rodion | 2 h |
-| Individual reflection | Everyone | 2 h each |
-| Final demo to Mike + submission | Everyone | – |
-
----
-
-## Architecture – layered (Week 9/10 lecture)
-
-Each entity is split into the same layers. Every layer talks only to the layer below it.
-
-| Layer | Class (example) | Job |
-|---|---|---|
-| Presentation | `CustomerCLI` | Menu, reads input, prints results and errors |
-| Business | `Customer` | Fields + validation rules (`verify…` methods), tested with JUnit |
-| Persistence | `CustomerDAO` | SQL: insert, find, update, close – uses `PreparedStatement` |
-| Database | `DatabaseConnection` + MySQL `newsagent_db` | Connection details and tables |
-
----
-
-## Risks
-
-| Risk | Likelihood | Impact | What we do |
+| Team Member | Wave 1 | Wave 2 | Additional Responsibility |
 |---|---|---|---|
-| A member finishes late, others are blocked | High (happened in Sprint 2) | High | Agreed column names, so work runs in parallel; push by Wednesday; blockers raised the same day |
-| Merge conflicts in shared files (`newsagent_db.sql`, README) | Medium | Medium | Each member edits only their own section; pull before every new branch |
-| Different local DB setup | Medium | Low | One shared SQL script; password only changed locally |
-| Lost work | Low | High | Commit after every TDD step, push daily |
+| Rodion Omelich | Customer Management (US 1, 7, 26) | Billing (US 19, 20, 21, 22, 28) | MainMenu and integration |
+| Ahmed Sawan | Delivery Areas and People (US 12, 17, 32) | Dockets and Reporting (US 11, 16, 18, 30) | Delivery integration |
+| Patrick Byrne | Orders and Holidays (US 2, 3, 4, 5, 6) | Recording Deliveries (US 14, 15) | Delivery records |
+| Dylan Kirwan | Publications and Stock (US 8, 9, 10, 27, 29, 31) | Stock on Dockets and Delivery History (US 13, 23, 24) | Stock management |
 
----
+### Current Implementation Status
 
-## Team
+| Component | Status |
+|---|---|
+| Customer Management | Implemented |
+| Billing and Payments | Implemented |
+| MainMenu | Implemented |
+| Delivery Areas and People | Implemented |
+| Delivery Dockets and Reporting | Implemented |
+| Publications — Wave 1 | Integrated |
+| Orders and Holidays — Wave 1 | Integrated |
+| Delivery Recording — Patrick Wave 2 | Pending final integration |
+| Stock and Delivery History — Dylan Wave 2 | Pending final integration |
 
-| Name | Wave 1 | Wave 2 |
+The current version demonstrates the main business workflow using predefined delivery records. Completion of an individual module does not automatically mean that every cross-module acceptance criterion has been verified.
+
+## 3. Application Architecture
+
+The system follows a layered architecture that separates user interaction, business logic and database operations.
+
+| Layer | Examples | Responsibility |
 |---|---|---|
-| Rodion Omelich | Customer, DB setup, repo | Billing, main menu |
-| Dylan Kirwan | Publication + stock | Stock on dockets, delivery history |
-| Ahmed Sawan | Delivery Area + Delivery Person | Delivery dockets, daily summary |
-| Patrick Byrne | Orders + holidays | Recording deliveries |
+| Presentation | MainMenu, CustomerCLI, BillCLI, DeliveryWave2CLI | User input, menus and output |
+| Business / Domain | Customer, Bill, Publication, DeliveryDocketGenerator | Validation, business rules and calculations |
+| Persistence | CustomerDAO, BillDAO, OrderDAO, PublicationDAO | Database operations using JDBC |
+| Database | MySQL newsagent_db | Data storage and relationships |
 
-## What the system does
+### Architecture Overview
 
-| Area | Features |
-|---|---|
-| **Customers** | Add, search, update and close customer accounts; holidays |
-| **Orders** | One or more publications per customer, on chosen days, with start/end dates |
-| **Publications & Stock** | Name, type, frequency, price and quantity in stock; low-stock warning |
-| **Deliveries** | Daily delivery docket per delivery area (24 areas); each delivery marked delivered / missed |
-| **Billing** | Monthly bill per customer listing each delivery by date and price, with a total; payments |
-
-## Development approach
-
-- **SDLC:** Agile Scrum (sprints above), with V-Model test front-loading: tests are designed from acceptance criteria before coding.
-- **TDD:** tests written first, then code (see `Login` / `LoginTest` – User Story 25, and `Customer` / `CustomerTest`).
-- **Spec:** `User Stories - Newsagent (32).xlsx`. Every attribute and rule becomes a DB column, a Java field, a validation method and a test case.
-
-## Tech stack
-
-| Area | Tool |
-|---|---|
-| Language / IDE | Java, Eclipse |
-| Testing | JUnit 5 |
-| Database | MySQL 8 + MySQL Workbench |
-| DB driver | `lib/mysql-connector-j-26.7.0.jar` |
-| Version control | Git + GitHub |
-
----
-
-## Getting started
-
-### 1. Clone the project into Eclipse
-1. `File → Import… → Git → Projects from Git (with smart import)`
-2. `Clone URI` → `https://github.com/Bread-crypto/Assignment1.git`
-3. Branch `master` → `Finish`. Use `eclipse-workspace` as your workspace, **not** the git folder.
-
-### 2. Libraries
-- **JUnit 5:** right-click project → `Build Path → Add Libraries… → JUnit → JUnit 5`
-- **MySQL driver:** right-click `lib/mysql-connector-j-26.7.0.jar` → `Build Path → Add to Build Path`
-
-### 3. Database
-1. Install **MySQL Server 8 + MySQL Workbench**. Root password: `root`.
-2. In Workbench: `File → Open SQL Script…` → `database/newsagent_db.sql` → run ⚡.
-3. Each of us has our own local copy of the DB. The **structure** is shared through this script, not the data.
-4. If your root password is different, change `PASSWORD` in `DatabaseConnection.java` **locally only** – don't commit it.
-
-### 4. Before your first push
-Create a **Personal Access Token**: GitHub → Settings → Developer settings → Personal access tokens → **Tokens (classic)** → Generate → tick `repo`.
-In Eclipse, enter your GitHub username + the token as the password. If push says `git-receive-pack not permitted`, Eclipse has no credentials. Fix it under `Git Repositories → Remotes → origin → Configure Push → Change… → Authentication`.
-
----
-
-## How we work with Git
-
-**Never commit directly to `master`.**
-
-```
-1. Team → Switch To → master → Team → Pull       (always start from the latest master)
-2. Team → Switch To → New Branch…                (feature/<area>, e.g. feature/billing)
-3. Write tests + code, commit after each TDD step (red → green → refactor)
-4. Team → Push Branch                             (at least once a week, by Wednesday)
-5. GitHub: Compare & pull request → a teammate reviews and merges
-6. Need code merged after you branched? Team → Fetch from origin → Merge → origin/master
+```text
+                   MainMenu.java
+                         |
+       ---------------------------------------
+       |           |           |             |
+   CustomerCLI  OrderCLI  PublicationCLI   BillCLI
+       |           |           |             |
+   Customer      Order     Publication       Bill
+       |           |           |             |
+   CustomerDAO  OrderDAO  PublicationDAO   BillDAO
+       |           |           |             |
+       ---------------------------------------
+                         |
+                  DatabaseConnection
+                         |
+                       MySQL
+                    newsagent_db
 ```
 
-**Never commit:** `bin/`, `*.class`, `.classpath`, `.project`, `.settings/` (they are in `.gitignore`).
+Additional delivery management, docket and reporting modules use the same database and architectural approach.
 
-| Branch type | Example |
+The separation of responsibilities improves maintainability, testability and integration.
+
+## 4. Main Menu
+
+The application starts from:
+
+`Assignment1/src/MainMenu.java`
+
+```text
+========== NEWS AGENT DELIVERY SYSTEM ==========
+1. Customers
+2. Publications & Stock
+3. Orders & Holidays
+4. Delivery Areas & Delivery People
+5. Delivery Dockets & Daily Reports
+6. Billing
+0. Exit
+```
+
+MainMenu provides a single entry point and connects the CLI modules developed by the team.
+
+The login component validates the username and password format before opening the main menu.
+
+The current login checks input format rather than authenticating against stored user accounts.
+
+## 5. Wave 1 — Core Entities
+
+### Customer Management — Rodion
+
+Files:
+
+- Customer.java
+- CustomerDAO.java
+- CustomerCLI.java
+- CustomerTest.java
+
+Features:
+
+- Add new customers.
+- Find customers by ID.
+- Search by surname.
+- List all customers.
+- Update customer information.
+- Close customer accounts.
+
+Customer validation includes:
+
+- First name: 1–50 characters.
+- Surname: 1–50 characters.
+- Address: 1–100 characters.
+- Phone number: exactly 10 digits, starting with 0.
+- Delivery area: ID between 1 and 24.
+
+Customers have ACTIVE or CLOSED status.
+
+Closing an account preserves existing records and historical relationships.
+
+### Publications — Dylan
+
+Features include:
+
+- Add publications.
+- Find and list publications.
+- Update stock quantity.
+- Change publication prices.
+- Manage publication frequency and release days.
+- Remove publications where database relationships permit.
+
+### Orders and Holidays — Patrick
+
+Features include:
+
+- Create orders for existing publications.
+- View customer orders.
+- Remove a publication from an active subscription.
+- Record customer holiday periods.
+- View customer holidays.
+
+Orders connect customers and publications using their IDs.
+
+### Delivery Areas and People — Ahmed
+
+Features include:
+
+- Add and manage delivery people.
+- Create and update delivery areas.
+- Assign active delivery people to areas.
+- View delivery areas and assigned delivery people.
+
+Customers are assigned to delivery areas through `deliveryAreaId`.
+
+## 6. Wave 2 — Business Operations
+
+### Billing — Rodion
+
+Files:
+
+- Bill.java
+- BillItem.java
+- BillDAO.java
+- BillCLI.java
+- BillTest.java
+
+Implemented user stories:
+
+- US 19 — Generate monthly customer bills.
+- US 20 — Generate itemised bills and text files.
+- US 21 — Record payments.
+- US 22 — Display unpaid bills and outstanding balances.
+- US 28 — Generate bills for all active customers.
+
+The Billing module calculates monthly charges using deliveries recorded with the status `DELIVERED`.
+
+The SQL query excludes `MISSED` and `OUT OF STOCK` deliveries.
+
+Publication prices are selected from the historical price records effective on the delivery date.
+
+The application prevents duplicate bills for the same customer and billing period.
+
+Payments update the bill status from `UNPAID` to `PAID`.
+
+Bills are exported as text files using the format:
+
+`bill_<customerId>_<yyyy-mm>.txt`
+
+### Delivery Dockets and Reporting — Ahmed
+
+Implemented features include:
+
+- Generate daily delivery dockets.
+- Filter deliveries by date and area.
+- Check customer status.
+- Check active orders and delivery schedules.
+- Exclude customers on holiday.
+- Check publication release schedules.
+- Print and save delivery dockets.
+- Display daily summaries and delivery statuses.
+
+The docket generator uses customer, order, publication, holiday and delivery-area information.
+
+### Delivery Recording — Patrick
+
+The planned workflow records:
+
+- DELIVERED
+- MISSED
+- OUT OF STOCK
+
+Missed deliveries may include a reason.
+
+The Wave 2 recording component is awaiting final integration into the main application.
+
+### Stock and Delivery History — Dylan
+
+The remaining Wave 2 integration includes docket-driven stock management, out-of-stock handling and delivery history.
+
+The existing demo data includes delivery status examples, but these predefined records do not replace the complete interactive stock workflow.
+
+## 7. Database Design
+
+The application uses MySQL.
+
+Database scripts:
+
+- `database/newsagent_db.sql`
+- `database/demo_data.sql`
+
+Main tables include:
+
+| Table | Purpose |
 |---|---|
-| Entity / feature | `feature/customer`, `feature/billing` |
-| Bug fix | `fix/bill-total-rounding` |
-| Docs / setup | `docs/sprint-plan`, `setup/database` |
+| CustomerTable | Customer details and account status |
+| publication | Publication details, prices and stock |
+| publication_price_history | Historical publication prices |
+| OrderTable | Customer subscriptions |
+| HolidayTable | Customer holiday periods |
+| DeliveryAreaTable | Delivery areas |
+| DeliveryPersonTable | Delivery people |
+| DeliveryDocketTable | Daily docket records |
+| DeliveryTable | Recorded delivery results |
+| DeliveryDocketLineTable | Individual docket lines |
+| StockHistoryTable | Stock movements |
+| BillTable | Monthly bills and payments |
 
-Commit messages – short, with the story number: `US-19: calculate monthly bill total`
+Foreign keys connect related records and maintain referential integrity.
+
+For example:
+
+- Orders reference customers and publications.
+- Bills reference customers.
+- Deliveries reference orders, customers and publications.
+- Delivery areas reference delivery people.
+
+The database is accessed using JDBC and DAO classes.
+
+## 8. Development Methodology
+
+### Agile Scrum
+
+The team selected Agile Scrum because the project was divided into multiple modules and developed collaboratively.
+
+Development was organised into sprints with regular progress reviews.
+
+### Sprint Plan
+
+| Sprint | Dates | Objective | Status |
+|---|---|---|---|
+| Sprint 0 | 14–25 September | SDLC justification, repository and requirements gathering | Completed |
+| Sprint 1 | 28 September–2 October | User stories, acceptance criteria and project planning | Completed |
+| Sprint 2 | 5–23 October | TDD and Wave 1 development | Completed with carried-over work |
+| Sprint 3 | 2–13 November | Complete Wave 1 and develop Wave 2 | Partially completed |
+| Sprint 4 | 16–20 November | Integration, testing and group submission | In progress |
+| Sprint 5 | 23–27 November | Individual reflection | Upcoming |
+
+### Test-Driven Development
+
+The development approach follows the lecturer's TDD example.
+
+```text
+User Story
+    |
+Acceptance Criteria
+    |
+Test Design
+    |
+Class Skeleton
+    |
+JUnit Tests — RED
+    |
+Implementation — GREEN
+    |
+Refactoring
+    |
+Database / DAO
+    |
+CLI
+    |
+User Acceptance Testing
+```
+
+### Billing TDD Evidence
+
+The development sequence is visible in GitHub history.
+
+| Commit | Description |
+|---|---|
+| 59143a4 | Billing Test Design |
+| f1232f3 | Bill skeleton and failing tests (RED) |
+| 85e08db | Billing implementation (GREEN) |
+| 8021a39 | BillTable, BillDAO and BillCLI |
+
+This provides evidence that tests were prepared before implementation.
+
+## 9. Git and Team Integration
+
+The team used GitHub for version control.
+
+Each developer worked in a separate feature branch.
+
+Branches were integrated using Git merges and pull requests.
+
+The integration process included:
+
+1. Fetching the latest changes.
+2. Reviewing feature branches.
+3. Combining compatible implementations.
+4. Resolving merge conflicts.
+5. Connecting independent CLI modules through MainMenu.
+6. Checking database compatibility.
+7. Running tests.
+8. Merging verified changes into master.
+
+The integrated application was merged into `master` through Pull Request #8 on 19 November 2026.
+
+Repository:
+
+https://github.com/Bread-crypto/Assignment1
+
+## 10. Running the Application
+
+### Requirements
+
+- Eclipse IDE for Java Developers.
+- Compatible JDK (the committed Eclipse settings currently specify Java 23).
+- MySQL Server.
+- MySQL Workbench.
+- JUnit 5.
+- MySQL Connector/J.
+
+### Installation
+
+1. Clone the repository:
+
+   `https://github.com/Bread-crypto/Assignment1.git`
+
+2. Import the Java project from the inner `Assignment1` directory into Eclipse.
+
+3. Configure the project JDK and add the MySQL JDBC driver to the Build Path.
+
+4. Add JUnit 5 to the Build Path for automated tests.
+
+5. Open MySQL Workbench.
+
+6. Execute:
+
+   `database/newsagent_db.sql`
+
+7. For a fresh demonstration database, execute:
+
+   `database/demo_data.sql`
+
+8. Check the local MySQL connection settings in:
+
+   `Assignment1/src/DatabaseConnection.java`
+
+9. Run:
+
+   `MainMenu.java → Run As → Java Application`
+
+### Login Validation
+
+- Username: 6–12 characters.
+- Password: 4–6 digits.
+- Maximum attempts: 3.
+
+These are format-validation rules, not production authentication.
+
+### Demonstration Data
+
+The demo database contains:
+
+- Customers and delivery areas.
+- Delivery people.
+- Publications and price history.
+- Customer subscriptions.
+- Holiday records.
+- Successful deliveries.
+- Missed deliveries.
+- Out-of-stock delivery examples.
+
+For Billing demonstrations, use October 2026.
+
+Example:
+
+```text
+Customer ID: 1
+Billing Year: 2026
+Billing Month: 10
+```
+
+With the original demo records, John Murphy's expected monthly bill is €11.60.
+
+If a bill already exists for that month, the system prevents duplicate generation.
+
+## 11. Testing and Quality Assurance
+
+The project uses JUnit 5 for automated testing.
+
+Test classes include:
+
+- CustomerTest
+- BillTest
+- LoginTest
+- DeliveryAreaTest
+- DeliveryPersonTest
+- DeliveryDocketGeneratorTest
+- DeliveryWave2ServiceTest
+- OrderDAOTest
+- PublicationTest
+
+Test documentation currently includes:
+
+- `tests/Bill Test Design.docx`
+- `tests/UAT.txt`
+
+JUnit tests verify validation, business rules and expected method behaviour.
+
+User Acceptance Testing checks application functionality through the CLI.
+
+A previous local integration check reported 213 out of 214 tests passing, with a reported failure in PublicationTest TC19.
+
+This is a previous result and must be verified after the final integration.
+
+## 12. End-to-End Workflow
+
+The intended complete workflow is:
+
+```text
+Create Customer
+       |
+       v
+Create Subscription
+       |
+       v
+Generate Daily Docket
+       |
+       v
+Allocate Stock
+       |
+       v
+Record Delivery Result
+       |
+       v
+Generate Monthly Bill
+       |
+       v
+Record Payment
+       |
+       v
+View Outstanding Balances
+```
+
+The current application demonstrates the main workflow using the shared MySQL database and predefined delivery records.
+
+The complete interactive delivery and stock lifecycle requires final integration of the remaining Wave 2 components.
+
+## 13. Known Limitations
+
+### Delivery Recording
+
+Patrick's additional Wave 2 recording functionality is awaiting final integration.
+
+The demonstration database includes predefined delivery records for testing Billing and Reporting.
+
+### Stock and Delivery History
+
+Dylan's full docket-driven stock and delivery-history features are awaiting integration.
+
+### Integration Testing
+
+Cross-module acceptance tests must be rerun following the final merges.
+
+### Regression Testing
+
+A previously reported PublicationTest failure requires verification.
+
+### Database Configuration
+
+The current database connection uses demonstration credentials.
+
+Database credentials should be externalised for a production deployment.
+
+### Login
+
+The login currently validates input format but does not authenticate against stored accounts.
+
+### Database Setup
+
+`CREATE TABLE IF NOT EXISTS` creates missing tables but does not migrate existing database structures.
+
+A fresh database is recommended for repeatable demonstration testing.
+
+## 14. Assignment Submission
+
+### Group Submission
+
+**Deadline: Friday, 20 November 2026 — Week 11**
+
+Worth 40% of the module assessment.
+
+One ZIP submission per group.
+
+Required components:
+
+1. Project Plan
+2. Specification
+3. Design
+4. Source Code
+5. Tests
+6. System Executable and GitHub Link
+
+### Individual Reflection
+
+**Deadline: Friday, 27 November 2026 — Week 12**
+
+Worth 20% of the module assessment.
+
+Each member submits their own reflection.
+
+## 15. Final Submission Checklist
+
+- [x] Shared GitHub repository established.
+- [x] Project plan and user stories created.
+- [x] Customer Management implemented.
+- [x] Billing implemented.
+- [x] Delivery Areas and People implemented.
+- [x] Delivery Dockets and Reporting implemented.
+- [x] Publication Wave 1 integrated.
+- [x] Orders and Holidays Wave 1 integrated.
+- [x] MainMenu integrated.
+- [x] Demonstration data prepared.
+- [x] Integration PR #8 merged into master.
+- [ ] Integrate and verify Patrick's Wave 2.
+- [ ] Integrate and verify Dylan's Wave 2.
+- [ ] Complete final JUnit regression testing.
+- [ ] Complete final end-to-end UAT.
+- [ ] Add remaining test evidence and final documentation.
+- [ ] Build and test the executable JAR.
+- [ ] Prepare the group submission ZIP.
+- [ ] Submit the group assignment.
+- [ ] Submit individual reflections.
 
 ---
 
-## Project status
-
-- [x] Sprint 0 – SDLC justification, repository, newsagent questions
-- [x] Sprint 1 – 32 user stories (Mike's format), project plan
-- [x] TDD example – Login (User Story 25), 14 tests passing
-- [x] Database `newsagent_db` + shared SQL script
-- [x] Wave 1 – Customer (Rodion), Delivery Area/Person (Ahmed)
-- [ ] Wave 1 – Publication (Dylan), Orders (Patrick) – PR by Sun 8 Nov
-- [ ] Sprint 3 – Wave 2: dockets, deliveries, billing (by Fri 13 Nov)
-- [ ] Sprint 4 – integration, main menu, UAT (week 11)
-- [ ] Sprint 5 – final testing, documentation, reflections (week 12)
+**Last reviewed: 19 November 2026**
