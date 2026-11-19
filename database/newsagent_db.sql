@@ -82,6 +82,7 @@ CREATE TABLE IF NOT EXISTS DeliveryDocketTable (
 -- -----------------------------------------------------
 -- Orders + Holidays (Patrick) - User Stories 2, 3, 4, 5, 6
 -- -----------------------------------------------------
+
 CREATE TABLE IF NOT EXISTS OrderTable (
     orderId INT AUTO_INCREMENT PRIMARY KEY,
     customerId INT NOT NULL,
@@ -161,3 +162,23 @@ SHOW TABLES;
 
 -- NOTE: Patrick's DeliveryTable, docket-line and stock-history tables
 -- are not included yet; verify their DAO schemas before adding them.
+
+-- CREATE TABLE IF NOT EXISTS OrderTable ( ... );
+-- CREATE TABLE IF NOT EXISTS HolidayTable ( ... );
+
+-- -----------------------------------------------------
+-- Billing (Rodion) - User Stories 19, 20, 21, 22, 28
+-- One bill per customer per month (UNIQUE stops a second bill for the same month)
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS BillTable (
+    billId       INT AUTO_INCREMENT PRIMARY KEY,
+    customerId   INT          NOT NULL,
+    billingYear  INT          NOT NULL,
+    billingMonth INT          NOT NULL,
+    totalAmount  DECIMAL(8,2) NOT NULL DEFAULT 0.00,
+    billStatus   VARCHAR(10)  NOT NULL DEFAULT 'UNPAID',
+    paymentDate  DATE         NULL,
+    CONSTRAINT uq_bill_customer_month UNIQUE (customerId, billingYear, billingMonth),
+    CONSTRAINT fk_bill_customer FOREIGN KEY (customerId) REFERENCES CustomerTable(customerId)
+);
+
