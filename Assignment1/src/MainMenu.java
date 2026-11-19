@@ -26,6 +26,7 @@ public class MainMenu {
             System.out.println("4. Delivery Areas & Delivery People");
             System.out.println("5. Delivery Dockets & Daily Reports");
             System.out.println("6. Billing");
+            System.out.println("7. Record Deliveries");
             System.out.println("0. Exit");
             System.out.print("Choose an option: ");
 
@@ -38,6 +39,7 @@ public class MainMenu {
                 case "4": DeliveryManagementCLI.main(args); break;
                 case "5": DeliveryWave2CLI.main(args); break;
                 case "6": BillCLI.showMenu(); break;
+                case "7": DeliveryCLI.main(args); break;
                 case "0": running = false; break;
                 default:  System.out.println("Invalid option. Please choose 0-6.");
             }
