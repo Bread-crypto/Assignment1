@@ -1,0 +1,243 @@
+=====================================================================
+BILLING - USER ACCEPTANCE TEST RESULTS (User Stories 19, 20, 21, 22, 28)
+Tester: Rodion Omelich        Date: 19/11/2026
+Setup: newsagent_db.sql + demo_data.sql on an empty database, run MainMenu -> 6. Billing
+=====================================================================
+
+UAT  Story  Action                                         Expected                                        Actual                                Result
+---  -----  ---------------------------------------------  ----------------------------------------------  ------------------------------------  ------
+B01  19,20  Bill customer 1 (John) for 10/2026             Itemised bill, only DELIVERED items, price on   5 lines, 26/10 MISSED not charged,    PASS
+                                                           delivery date (Irish Times 1.80 -> 2.00 from      Irish Times 1.80/1.80/2.00,
+                                                           15/10), total 11.60, saved to bill_1_2026-10.txt total 11.60, file saved
+B02  19     Bill John for 10/2026 again                    Error: bill already exists                      Error shown, no new bill              PASS
+B03  28     Bill all active customers for 10/2026          3 created (Mary, Sean, Aoife), John skipped,    Bills created: 3, skipped: 1,          PASS
+                                                           CLOSED customer Peter ignored, total 9.50        total 9.50
+B04  19,24  Mary's bill                                    OUT OF STOCK delivery on 09/10 not charged:     3.00                                  PASS
+                                                           2 x 1.50 = 3.00
+B05  22     View unpaid bills                              4 bills, total outstanding 21.10                4 bills, total 21.10                  PASS
+B06  21     Pay bill 1 with date 2099-01-01                Error: invalid payment date, still UNPAID        Error shown                           PASS
+B07  21     Pay bill 1 with today's date (Enter)           Bill 1 is now PAID                              "Payment recorded. Bill 1 is now PAID" PASS
+B08  21     Pay bill 1 again                               Error: already PAID                             Error shown                           PASS
+B09  22     View unpaid bills after payment                Bill 1 no longer listed, total 9.50             3 bills, total 9.50                   PASS
+B10  20     View / print bill 2                            Customer name, address, month, bill ID, lines,  Shown and saved to bill_2_2026-10.txt PASS
+                                                           total
+B11  19     Bill John for 12/2026 (future month)           Error: invalid billing month                    Error shown                           PASS
+B12  19     Bill customer 99                               Error: invalid customer ID                      Error shown                           PASS
+
+Summary: 12 / 12 PASS. JUnit: BillTest 16 / 16 pass (TC01-TC16, see tests/Bill Test Design.docx).
+
+=====================================================================
+CONSOLE OUTPUT
+=====================================================================
+Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Djavax.net.ssl.trustStoreType=JKS -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=44409 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
+===== LOGIN =====
+Username (6-12 characters): rodion1
+Password (4-6 digits): 1234
+Login successful. Welcome, rodion1.
+
+========== NEWS AGENT DELIVERY SYSTEM ==========
+1. Customers
+2. Publications & Stock
+3. Orders & Holidays
+4. Delivery Areas & Delivery People
+5. Delivery Dockets & Daily Reports
+6. Billing
+0. Exit
+Choose an option: 6
+
+===== BILLING MENU =====
+1. Generate Monthly Bill For A Customer
+2. Generate Bills For All Active Customers
+3. Record A Payment
+4. View Unpaid Bills
+5. View / Print A Bill
+0. Back
+Choose an option: 1
+=== Generate Monthly Bill ===
+Customer ID: 1
+Billing Year (e.g. 2026): 2026
+Billing Month (1-12): 10
+========== NEWSAGENT MONTHLY BILL ==========
+Bill ID: 1
+Customer: John Murphy
+Address: 12 Church Street, Athlone
+Billing Month: 10/2026
+--------------------------------------------
+2026-10-05   Irish Times                      1.80
+2026-10-06   RTE Guide                        3.00
+2026-10-12   Irish Times                      1.80
+2026-10-13   RTE Guide                        3.00
+2026-10-19   Irish Times                      2.00
+--------------------------------------------
+TOTAL DUE: 11.60
+Status: UNPAID
+
+Bill saved to bill_1_2026-10.txt
+
+===== BILLING MENU =====
+1. Generate Monthly Bill For A Customer
+2. Generate Bills For All Active Customers
+3. Record A Payment
+4. View Unpaid Bills
+5. View / Print A Bill
+0. Back
+Choose an option: 1
+=== Generate Monthly Bill ===
+Customer ID: 1
+Billing Year (e.g. 2026): 2026
+Billing Month (1-12): 10
+Error: A bill for this customer and month already exists.
+
+===== BILLING MENU =====
+1. Generate Monthly Bill For A Customer
+2. Generate Bills For All Active Customers
+3. Record A Payment
+4. View Unpaid Bills
+5. View / Print A Bill
+0. Back
+Choose an option: 2
+=== Generate Bills For All Active Customers ===
+Billing Year (e.g. 2026): 2026
+Billing Month (1-12): 10
+Bill saved to bill_2_2026-10.txt
+Bill saved to bill_3_2026-10.txt
+Bill saved to bill_4_2026-10.txt
+Bills created: 3
+Customers skipped (already billed): 1
+Total amount billed: 9.50
+
+===== BILLING MENU =====
+1. Generate Monthly Bill For A Customer
+2. Generate Bills For All Active Customers
+3. Record A Payment
+4. View Unpaid Bills
+5. View / Print A Bill
+0. Back
+Choose an option: 4
+Bill ID  Customer                  Month          Amount
+1        John Murphy               10/2026         11.60
+2        Mary Kelly                10/2026          3.00
+3        Sean O'Brien              10/2026          4.00
+4        Aoife Doyle               10/2026          2.50
+Total outstanding: 21.10
+
+===== BILLING MENU =====
+1. Generate Monthly Bill For A Customer
+2. Generate Bills For All Active Customers
+3. Record A Payment
+4. View Unpaid Bills
+5. View / Print A Bill
+0. Back
+Choose an option: 3
+=== Record Payment ===
+Bill ID: 1
+Payment Date (yyyy-mm-dd, Enter = today): 2099-01-01
+Error: Invalid Payment Date (today or a past date only)
+
+===== BILLING MENU =====
+1. Generate Monthly Bill For A Customer
+2. Generate Bills For All Active Customers
+3. Record A Payment
+4. View Unpaid Bills
+5. View / Print A Bill
+0. Back
+Choose an option: 3
+=== Record Payment ===
+Bill ID: 1
+Payment Date (yyyy-mm-dd, Enter = today): 
+Payment recorded. Bill 1 is now PAID.
+
+===== BILLING MENU =====
+1. Generate Monthly Bill For A Customer
+2. Generate Bills For All Active Customers
+3. Record A Payment
+4. View Unpaid Bills
+5. View / Print A Bill
+0. Back
+Choose an option: 3
+=== Record Payment ===
+Bill ID: 1
+Error: This bill is already PAID.
+
+===== BILLING MENU =====
+1. Generate Monthly Bill For A Customer
+2. Generate Bills For All Active Customers
+3. Record A Payment
+4. View Unpaid Bills
+5. View / Print A Bill
+0. Back
+Choose an option: 4
+Bill ID  Customer                  Month          Amount
+2        Mary Kelly                10/2026          3.00
+3        Sean O'Brien              10/2026          4.00
+4        Aoife Doyle               10/2026          2.50
+Total outstanding: 9.50
+
+===== BILLING MENU =====
+1. Generate Monthly Bill For A Customer
+2. Generate Bills For All Active Customers
+3. Record A Payment
+4. View Unpaid Bills
+5. View / Print A Bill
+0. Back
+Choose an option: 5
+Bill ID: 2
+========== NEWSAGENT MONTHLY BILL ==========
+Bill ID: 2
+Customer: Mary Kelly
+Address: 4 Dublin Road, Athlone
+Billing Month: 10/2026
+--------------------------------------------
+2026-10-05   Irish Independent                1.50
+2026-10-07   Irish Independent                1.50
+--------------------------------------------
+TOTAL DUE: 3.00
+Status: UNPAID
+
+Bill saved to bill_2_2026-10.txt
+
+===== BILLING MENU =====
+1. Generate Monthly Bill For A Customer
+2. Generate Bills For All Active Customers
+3. Record A Payment
+4. View Unpaid Bills
+5. View / Print A Bill
+0. Back
+Choose an option: 1
+=== Generate Monthly Bill ===
+Customer ID: 1
+Billing Year (e.g. 2026): 2026
+Billing Month (1-12): 12
+Error: Invalid Billing Month (current or past month only)
+
+===== BILLING MENU =====
+1. Generate Monthly Bill For A Customer
+2. Generate Bills For All Active Customers
+3. Record A Payment
+4. View Unpaid Bills
+5. View / Print A Bill
+0. Back
+Choose an option: 1
+=== Generate Monthly Bill ===
+Customer ID: 99
+Error: Invalid Customer ID
+
+===== BILLING MENU =====
+1. Generate Monthly Bill For A Customer
+2. Generate Bills For All Active Customers
+3. Record A Payment
+4. View Unpaid Bills
+5. View / Print A Bill
+0. Back
+Choose an option: 0
+
+========== NEWS AGENT DELIVERY SYSTEM ==========
+1. Customers
+2. Publications & Stock
+3. Orders & Holidays
+4. Delivery Areas & Delivery People
+5. Delivery Dockets & Daily Reports
+6. Billing
+0. Exit
+Choose an option: 0
+Goodbye.

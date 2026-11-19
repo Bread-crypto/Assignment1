@@ -1,0 +1,129 @@
+=====================================================================
+SYSTEM (END-TO-END) USER ACCEPTANCE TEST RESULTS - integrated MainMenu
+Tester: Rodion Omelich        Date: 19/11/2026
+Build: master after PR #8 (integration)
+Setup: DROP DATABASE newsagent_db; run database/newsagent_db.sql, then database/demo_data.sql;
+       run MainMenu.java (Eclipse: Run As -> Java Application)
+=====================================================================
+
+UAT  Story          Action                                        Expected                                         Result
+---  -------------  --------------------------------------------  -----------------------------------------------  ------
+S01  25             Log in with rodion1 / 1234                    "Login successful", main menu shown              PASS
+S02  1, 7, 26       1. Customers -> 4. List all                   5 customers, Peter Quinn CLOSED                  PASS
+S03  27, 8          2. Publications -> 3. List                    4 publications with price and stock              PASS
+S04  2, 4           3. Orders -> 2. View orders of customer 1     2 orders: Irish Times DAILY, RTE Guide TUESDAY   PASS
+S05  2, 5           3. Orders -> 1. Add order with invalid input  "Invalid ID or date format", nothing saved       PASS
+S06  11, 16         5. Dockets -> 1. Docket area 1, 2026-11-23    John - Irish Times (DAILY), Mary - Irish         PASS
+                    (a Monday)                                    Independent (Mon/Wed/Fri); RTE Guide not listed
+                                                                  (Tuesdays only); saved to dockets/docket_1_...txt
+S07  19, 20, 29     6. Billing -> 1. Bill customer 1, 10/2026     Only DELIVERED items; price changes 1.80 -> 2.00  PASS
+                                                                  from 15/10; MISSED on 26/10 not charged;
+                                                                  TOTAL DUE 11.60
+S08  -              Leave every sub-menu with 0                   Returns to main menu; input still works after    PASS
+                                                                  Publications menu (Scanner bug fixed)
+S09  -              0. Exit                                       "Goodbye."                                       PASS
+
+Chain tested: customer -> publication -> order -> daily docket -> recorded deliveries -> monthly bill.
+Note: recorded deliveries (DELIVERED / MISSED / OUT OF STOCK) come from demo_data.sql, because
+recording deliveries from the menu (User Stories 14, 15) is not implemented - see README "Known limitations".
+
+=====================================================================
+CONSOLE OUTPUT (run 19/11/2026)
+=====================================================================
+===== LOGIN =====
+Username (6-12 characters): rodion1
+Password (4-6 digits): 1234
+Login successful. Welcome, rodion1.
+
+========== NEWS AGENT DELIVERY SYSTEM ==========
+1. Customers
+2. Publications & Stock
+3. Orders & Holidays
+4. Delivery Areas & Delivery People
+5. Delivery Dockets & Daily Reports
+6. Billing
+0. Exit
+Choose an option: 1
+
+===== CUSTOMER MANAGEMENT MENU =====
+Choose an option: 4
+ID   First Name      Surname         Address                   Phone       Area  Status
+1    John            Murphy          12 Church Street, Athlone 0861234567  1     ACTIVE
+2    Mary            Kelly           4 Dublin Road, Athlone    0861234568  1     ACTIVE
+3    Sean            O'Brien         7 Monksland Ave           0861234569  2     ACTIVE
+4    Aoife           Doyle           22 Coosan Point           0861234570  3     ACTIVE
+5    Peter           Quinn           3 Old Mill, Athlone       0861234571  1     CLOSED
+Choose an option: 0
+Goodbye.
+
+Choose an option: 2
+Publication Menu
+Choose: 3
+2 | Irish Independent | NEWSPAPER | €1,50 | Stock: 30
+1 | Irish Times | NEWSPAPER | €2,00 | Stock: 40
+4 | RTE Guide | MAGAZINE | €3,00 | Stock: 10
+3 | Westmeath Independent | NEWSPAPER | €2,50 | Stock: 3
+Choose: 0
+
+Choose an option: 3
+===== ORDER AND HOLIDAY MANAGEMENT MENU =====
+Choose an option: 1
+Enter customer ID: 0
+Enter publication ID: 0
+Enter delivery days (e.g. Mon,Wed,Fri): 4
+Enter start date (yyyy-MM-dd): 3
+Invalid ID or date format.
+Choose an option: 2
+Enter customer ID: 1
+Order ID: 1, Publication ID: 1, Delivery Days: DAILY, Start Date: 2026-10-01, End Date: null
+Order ID: 2, Publication ID: 4, Delivery Days: TUESDAY, Start Date: 2026-10-01, End Date: null
+Choose an option: 0
+Goodbye.
+
+Choose an option: 5
+1 Preview/print docket | 2 Recorded summary | 3 Today's status  | 0 Exit
+1
+Delivery area ID (1-24): 1
+Date (yyyy-MM-dd): 2026-11-23
+DAILY DELIVERY DOCKET
+Date: 2026-11-23
+Delivery Area: 1
+Delivery Person: Tom Ryan
+
+1. John Murphy | 12 Church Street, Athlone
+   Publication: Irish Times | Order ID: 1
+   [ ] Delivered     [ ] Missed
+2. Mary Kelly | 4 Dublin Road, Athlone
+   Publication: Irish Independent | Order ID: 3
+   [ ] Delivered     [ ] Missed
+
+Saved to: C:\Users\Tetiana\git\Assignment1\dockets\docket_1_2026-11-23.txt
+0
+
+Choose an option: 6
+===== BILLING MENU =====
+Choose an option: 1
+=== Generate Monthly Bill ===
+Customer ID: 1
+Billing Year (e.g. 2026): 2026
+Billing Month (1-12): 10
+========== NEWSAGENT MONTHLY BILL ==========
+Bill ID: 1
+Customer: John Murphy
+Address: 12 Church Street, Athlone
+Billing Month: 10/2026
+--------------------------------------------
+2026-10-05   Irish Times                      1,80
+2026-10-06   RTE Guide                        3,00
+2026-10-12   Irish Times                      1,80
+2026-10-13   RTE Guide                        3,00
+2026-10-19   Irish Times                      2,00
+--------------------------------------------
+TOTAL DUE: 11,60
+Status: UNPAID
+
+Bill saved to bill_1_2026-10.txt
+Choose an option: 0
+
+Choose an option: 0
+Goodbye.
