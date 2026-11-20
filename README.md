@@ -1,14 +1,15 @@
+
 # News Agent Delivery System
 
 **Software Engineering 3 — Team Assignment | TUS Athlone | 2026**
 
-A Java console application for managing a local newsagent's customers, publications, subscriptions, delivery areas, daily delivery dockets and monthly billing.
+A Java console application for managing a local newsagent's customers, publications, subscriptions, delivery areas, daily delivery dockets, stock and monthly billing.
 
 The project uses Java, Eclipse, JUnit 5, MySQL and GitHub, following an Agile Scrum development approach with Test-Driven Development (TDD).
 
 ## 1. Project Overview
 
-The News Agent Delivery System is designed to support the daily operations of a local newspaper and magazine delivery business.
+The News Agent Delivery System supports the daily operations of a local newspaper and magazine delivery business.
 
 The application provides functionality for:
 
@@ -18,61 +19,87 @@ The application provides functionality for:
 - Customer subscriptions and holidays.
 - Delivery areas and delivery people.
 - Daily delivery dockets and reporting.
+- Recording completed and missed deliveries.
+- Stock issuing and delivery history.
 - Monthly billing and payment recording.
 - Outstanding balance management.
 
 The application uses a shared MySQL database and a common console interface.
 
-### Project Status
+### Final Project Status
 
-The core application modules have been developed across two development waves.
+The project was developed across two main development waves, followed by a final integration stage.
 
-The integrated application was merged into `master` through Pull Request #8 on 19 November 2026.
+The initial integration was merged into `master` through Pull Request #8 on 19 November 2026.
 
-The final stage focuses on combining the latest contributions, verifying database compatibility, completing regression testing and preparing the group submission.
+The final integration was completed through [Pull Request #9](https://github.com/Bread-crypto/Assignment1/pull/9) on 20 November 2026.
 
-Demonstration data is available to support testing of the main business workflow.
+The integrated application contains the modules developed by all four team members.
+
+**Final verification:**
+
+- Java compilation completed successfully.
+- 226 JUnit tests passed.
+- 0 test failures and 0 errors.
+- All eight MainMenu sections integrated.
+- Customer, Billing and Delivery operations tested with MySQL.
+- Delivery history and out-of-stock reporting verified.
+- Stock issuing tested with corresponding database records.
+- Runnable JAR built and successfully launched.
+- Group submission prepared and submitted through Moodle.
 
 ## 2. Team Responsibilities
 
 | Team Member | Wave 1 | Wave 2 | Additional Responsibility |
 |---|---|---|---|
-| Rodion Omelich | Customer Management (US 1, 7, 26) | Billing (US 19, 20, 21, 22, 28) | MainMenu and integration |
+| Rodion Omelich | Customer Management (US 1, 7, 26) | Billing (US 19, 20, 21, 22, 28) | MainMenu and final integration |
 | Ahmed Sawan | Delivery Areas and People (US 12, 17, 32) | Delivery Dockets and Reporting (US 11, 16, 18, 30) | Delivery integration |
 | Patrick Byrne | Orders and Holidays (US 2, 3, 4, 5, 6) | Recording Deliveries (US 14, 15) | Delivery records |
 | Dylan Kirwan | Publications and Stock (US 8, 9, 10, 27, 29, 31) | Stock on Dockets and Delivery History (US 13, 23, 24) | Stock management |
 
-Each team member was responsible for implementing, testing and integrating their assigned functionality.
+Each team member developed and tested their assigned functionality.
 
-Development was coordinated using GitHub feature branches, commits and pull requests.
+GitHub branches, commits and pull requests were used to manage the development and integration process.
 
 ## 3. Application Architecture
 
-The system follows a layered architecture that separates user interaction, business logic and database operations.
+The system follows a layered architecture that separates user interaction, business rules and database operations.
 
 | Layer | Examples | Responsibility |
 |---|---|---|
-| Presentation | MainMenu, CustomerCLI, BillCLI, DeliveryWave2CLI | User input, menus and output |
-| Business / Domain | Customer, Bill, Publication, DeliveryDocketGenerator | Validation, business rules and calculations |
-| Persistence | CustomerDAO, BillDAO, OrderDAO, PublicationDAO | Database operations using JDBC |
+| Presentation | MainMenu, CustomerCLI, BillCLI, DeliveryCLI, DeliveryWave2CLI, DylanWave2CLI | User input, menus and output |
+| Business / Domain | Customer, Bill, Publication, DeliveryDocketGenerator, DocketStockService | Validation, business rules and calculations |
+| Persistence | CustomerDAO, BillDAO, OrderDAO, DeliveryDAO, StockHistoryDAO | Database operations using JDBC |
 | Database | MySQL newsagent_db | Data storage and relationships |
 
 ### Architecture Overview
 
-**MainMenu → CLI Modules → Domain Classes / DAO → MySQL Database**
+```text
+                     MainMenu.java
+                           |
+                    CLI Modules
+                           |
+                Domain Classes / DAO
+                           |
+                 DatabaseConnection
+                           |
+                     MySQL Database
+```
 
-The application uses domain classes for validation and business rules, while DAO classes manage persistence.
+The application separates responsibilities between classes.
+
+CLI classes handle user interaction, domain classes implement validation and business rules, and DAO classes perform SQL operations.
 
 For example, when generating a monthly bill:
 
 1. BillCLI collects the customer ID and billing period.
 2. Bill validates the billing information.
-3. BillDAO retrieves the relevant delivery records and prices.
+3. BillDAO retrieves delivery records and prices.
 4. Bill calculates the total.
 5. BillDAO saves the bill to MySQL.
-6. BillCLI displays the result and exports the bill as a text file.
+6. BillCLI displays and exports the result.
 
-This separation improves maintainability, testability and code reuse.
+This separation makes the code easier to understand, maintain, test and integrate.
 
 ## 4. Main Menu
 
@@ -80,34 +107,47 @@ The application starts from:
 
 `Assignment1/src/MainMenu.java`
 
-The integrated main menu contains:
+The final integrated main menu contains:
 
-| Option | Module |
-|---|---|
-| 1 | Customers |
-| 2 | Publications & Stock |
-| 3 | Orders & Holidays |
-| 4 | Delivery Areas & Delivery People |
-| 5 | Delivery Dockets & Daily Reports |
-| 6 | Billing |
-| 0 | Exit |
+```text
+========== NEWS AGENT DELIVERY SYSTEM ==========
+
+1. Customers
+2. Publications & Stock
+3. Orders & Holidays
+4. Delivery Areas & Delivery People
+5. Delivery Dockets & Daily Reports
+6. Billing
+7. Record Deliveries
+8. Stock and Delivery History
+0. Exit
+```
 
 MainMenu provides a single entry point and connects the individual CLI modules.
 
-The login component validates the username and password format before displaying the main menu.
+The login component validates username and password format before displaying the main menu.
+
+Each submenu allows the user to return to MainMenu.
 
 ## 5. Wave 1 — Core Entities
 
 ### Customer Management
 
-Files:
+Main files:
 
 - Customer.java
 - CustomerDAO.java
 - CustomerCLI.java
 - CustomerTest.java
 
-Features include creating customers, searching by ID or surname, listing customers, updating information and closing accounts.
+Features include:
+
+- Creating customers.
+- Finding customers by ID.
+- Searching by surname.
+- Listing all customers.
+- Updating customer details.
+- Closing customer accounts.
 
 Customer validation rules include:
 
@@ -148,8 +188,7 @@ Orders connect customers with publications and define delivery schedules.
 
 The delivery management module supports:
 
-- Adding delivery people.
-- Viewing and updating delivery people.
+- Adding and updating delivery people.
 - Managing active and inactive statuses.
 - Creating and updating delivery areas.
 - Assigning delivery people to delivery areas.
@@ -160,7 +199,7 @@ Customers are connected to delivery areas using `deliveryAreaId`.
 
 ### Monthly Billing
 
-Files:
+Main files:
 
 - Bill.java
 - BillItem.java
@@ -180,9 +219,9 @@ Billing supports:
 
 Bills are calculated using delivery records marked `DELIVERED`.
 
-Records marked `MISSED` or `OUT OF STOCK` are excluded.
+Records marked `MISSED` or `OUT OF STOCK` are excluded from monthly charges.
 
-Publication prices are obtained from the price history applicable on the delivery date.
+Historical publication prices are selected based on the delivery date.
 
 The application prevents duplicate bills for the same customer and billing period.
 
@@ -194,33 +233,81 @@ Exported bills use the format:
 
 ### Delivery Dockets and Reporting
 
-The docket and reporting functionality supports:
+Main classes include:
+
+- DeliveryDocket.java
+- DeliveryDocketDAO.java
+- DeliveryDocketGenerator.java
+- DeliveryWave2Service.java
+- DeliveryWave2CLI.java
+
+Features include:
 
 - Generating daily delivery dockets.
-- Filtering by delivery date and area.
+- Filtering deliveries by date and area.
 - Checking customer and order status.
-- Checking publication schedules.
+- Checking publication release schedules.
 - Excluding customers on holiday.
-- Displaying delivery results and summaries.
+- Displaying daily delivery summaries.
 - Printing and saving delivery dockets.
+- Issuing stock for a selected docket.
 
 ### Delivery Recording
 
-The delivery recording functionality manages delivery outcomes, including:
+Main files:
 
-- DELIVERED
-- MISSED
-- OUT OF STOCK
+- Delivery.java
+- DeliveryDAO.java
+- DeliveryCLI.java
+- DeliveryTest.java
+- DeliveryDAOTest.java
 
-Missed deliveries can include a reason.
+Delivery Recording supports:
 
-Delivery records are stored in the database and used by reporting and billing functionality.
+- Recording completed deliveries.
+- Recording missed deliveries with reasons.
+- Recording out-of-stock delivery outcomes.
+- Saving records to DeliveryTable.
+- Retrieving completed delivery history.
+
+Delivery records are shared with the Billing and Reporting modules.
 
 ### Stock and Delivery History
 
-Stock management and delivery history form part of the overall delivery workflow.
+Main files:
 
-The final integration stage includes verifying stock movements, delivery status handling and the relationships between docket data and recorded delivery outcomes.
+- DocketStockService.java
+- StockHistoryDAO.java
+- DeliveryHistoryDAO.java
+- DeliveryHistoryEntry.java
+- DylanWave2CLI.java
+
+Features include:
+
+- Issuing publication stock for delivery dockets.
+- Recording stock movements.
+- Identifying out-of-stock publications.
+- Viewing customer delivery history.
+- Viewing customers affected by out-of-stock deliveries.
+- Returning eligible undelivered stock through the service layer.
+
+### Stock Integration Test
+
+Stock issuing was tested through the integrated CLI using MySQL.
+
+A single Irish Times delivery was issued for Docket ID 1.
+
+The database confirmed:
+
+| Check | Result |
+|---|---|
+| DeliveryDocketLineTable | Docket line created |
+| StockHistoryTable | ISSUED movement recorded |
+| Quantity issued | 1 |
+| Previous stock | 40 |
+| New stock | 39 |
+
+This verified the interaction between the docket, stock and database components.
 
 ## 7. Database Design
 
@@ -243,12 +330,12 @@ Main tables include:
 | DeliveryAreaTable | Delivery areas |
 | DeliveryPersonTable | Delivery people |
 | DeliveryDocketTable | Daily delivery dockets |
-| DeliveryTable | Delivery records |
+| DeliveryTable | Recorded delivery results |
 | DeliveryDocketLineTable | Individual docket lines |
 | StockHistoryTable | Stock movements |
 | BillTable | Monthly bills and payments |
 
-Foreign keys connect related records and maintain referential integrity.
+Foreign keys connect related records and support referential integrity.
 
 The application accesses MySQL using JDBC and DAO classes.
 
@@ -277,11 +364,11 @@ The project follows the lecturer's TDD process:
 
 **User Story → Acceptance Criteria → Test Design → Class Skeleton → JUnit RED → Implementation GREEN → Refactor → DAO → CLI → UAT**
 
-The process helps ensure that functionality is implemented against defined requirements.
+This approach connects implementation with defined test cases and acceptance criteria.
 
 ### Billing TDD Evidence
 
-The Billing implementation includes separate commits demonstrating the TDD process.
+The Billing implementation includes separate commits demonstrating the development process.
 
 | Commit | Description |
 |---|---|
@@ -290,26 +377,41 @@ The Billing implementation includes separate commits demonstrating the TDD proce
 | 85e08db | Billing implementation (GREEN) |
 | 8021a39 | BillTable, BillDAO and BillCLI |
 
-This provides evidence of the test-first development sequence.
+These commits provide evidence of the test-first development sequence.
 
 ## 9. Git and Team Integration
 
 GitHub was used for collaborative development and version control.
 
-Each team member worked on assigned functionality using separate branches.
+Each team member developed their assigned functionality using separate branches.
 
 The integration process involved:
 
-1. Fetching the latest changes.
-2. Reviewing feature branches.
-3. Combining compatible implementations.
-4. Resolving merge conflicts.
-5. Connecting CLI modules through MainMenu.
-6. Checking database compatibility.
-7. Running regression and integration tests.
-8. Merging verified changes into master.
+1. Fetching the latest team branches.
+2. Reviewing source code and dependencies.
+3. Bringing together compatible implementations.
+4. Resolving database and class compatibility issues.
+5. Connecting the CLI modules through MainMenu.
+6. Running JUnit regression tests.
+7. Testing the application with MySQL.
+8. Building and testing the executable JAR.
+9. Merging verified changes into master.
 
-The shared application was integrated through Pull Request #8 on 19 November 2026.
+### Integration History
+
+| Pull Request | Description |
+|---|---|
+| PR #4 | Customer Management |
+| PR #5 | Delivery Areas and People |
+| PR #7 | Billing |
+| PR #8 | Initial system integration |
+| PR #9 | Final Delivery, Stock, Billing and Documentation integration |
+
+The final integration was merged into `master` on **20 November 2026** through:
+
+[Pull Request #9 — Final Integration](https://github.com/Bread-crypto/Assignment1/pull/9)
+
+Separate feature branches and commit history remain available for reviewing development progress.
 
 **Repository:** https://github.com/Bread-crypto/Assignment1
 
@@ -318,7 +420,7 @@ The shared application was integrated through Pull Request #8 on 19 November 202
 ### Requirements
 
 - Eclipse IDE for Java Developers.
-- Java JDK (the committed Eclipse project settings specify Java 23).
+- Compatible Java JDK.
 - MySQL Server.
 - MySQL Workbench.
 - JUnit 5.
@@ -332,9 +434,9 @@ The shared application was integrated through Pull Request #8 on 19 November 202
 
 2. Import the Java project from the inner `Assignment1` directory into Eclipse.
 
-3. Configure the project JDK.
+3. Configure a compatible Java JDK and add the MySQL JDBC driver to the Build Path.
 
-4. Add the MySQL JDBC driver and JUnit 5 to the Build Path.
+4. Add JUnit 5 to the Build Path for automated testing.
 
 5. Open MySQL Workbench.
 
@@ -346,6 +448,20 @@ The shared application was integrated through Pull Request #8 on 19 November 202
 
 9. Run `MainMenu.java` as a Java Application.
 
+### Running the Executable
+
+A runnable JAR is included at:
+
+`release/NewsagentDeliverySystem.jar`
+
+Run it using:
+
+```bash
+java -jar release/NewsagentDeliverySystem.jar
+```
+
+The executable was tested with Java and a local MySQL database.
+
 ### Login Validation
 
 - Username: 6–12 characters.
@@ -356,15 +472,24 @@ The current implementation validates input format rather than authenticating aga
 
 ### Demonstration Data
 
-The demonstration database contains customers, delivery areas, delivery people, publications, subscriptions, holidays and example delivery records.
+The demonstration database includes:
 
-For Billing demonstrations, use October 2026.
+- Customers and delivery areas.
+- Delivery people.
+- Publications and price history.
+- Orders and subscriptions.
+- Holiday records.
+- Delivered, missed and out-of-stock examples.
+
+For Billing demonstrations, October 2026 can be used.
 
 Example:
 
-- Customer ID: 1
-- Billing Year: 2026
-- Billing Month: 10
+```text
+Customer ID: 1
+Billing Year: 2026
+Billing Month: 10
+```
 
 With the original demonstration data, John Murphy's expected bill is €11.60.
 
@@ -383,37 +508,52 @@ Test classes include:
 - DeliveryPersonTest
 - DeliveryDocketGeneratorTest
 - DeliveryWave2ServiceTest
+- DeliveryTest
+- DeliveryDAOTest
 - OrderDAOTest
+- HolidayDAOTest
 - PublicationTest
 
-Additional test classes cover order, holiday and delivery functionality.
+Additional tests cover order, holiday and delivery database functionality.
+
+### Final JUnit Results
+
+The complete integrated JUnit suite was executed in Eclipse on 20 November 2026.
+
+| Metric | Result |
+|---|---|
+| Tests run | 226 |
+| Passed | 226 |
+| Errors | 0 |
+| Failures | 0 |
 
 ### Test Design and UAT
 
-Test documentation includes:
+Test documentation is stored in the `tests/` directory:
 
-- `tests/Bill Test Design.docx`
-- `tests/UAT.txt`
+- `Bill Test Design.docx`
+- `Customer Test Design.docx`
+- `Billing UAT results.txt`
+- `Customer UAT results.txt`
+- `System UAT results.txt`
 
 JUnit verifies individual methods, validation rules and business logic.
 
 User Acceptance Testing verifies application behaviour through the console.
 
-Final regression testing is carried out against the integrated version of the system.
-
-Testing results should be recorded after the final integration.
+The integrated application was also tested manually with MySQL, including delivery recording, billing, delivery history, stock issuing and customer management.
 
 ## 12. End-to-End Business Workflow
 
 The intended application workflow is:
 
-**Create Customer → Create Subscription → Generate Daily Docket → Allocate Stock → Record Delivery → Generate Monthly Bill → Record Payment → View Outstanding Balance**
+**Create Customer → Create Subscription → Generate Daily Docket → Issue Stock → Record Delivery → Generate Monthly Bill → Record Payment → View Outstanding Balance**
 
-The shared database allows the modules to exchange information.
+The shared MySQL database allows the modules to exchange information.
 
-Demonstration data is available for testing the business workflow, including delivered, missed and out-of-stock examples.
+The integrated application supports the main operations through its CLI modules.
 
-Final integration testing verifies the interactions between the individual modules.
+Demonstration data is provided to support repeatable testing.
 
 ## 13. Technical Considerations
 
@@ -421,13 +561,13 @@ Final integration testing verifies the interactions between the individual modul
 
 The database connection uses local demonstration credentials.
 
-For a production environment, credentials should be stored in external configuration rather than source code.
+For production, credentials should be stored in external configuration rather than source code.
 
 ### Authentication
 
 The current login component validates input format.
 
-A production version would require secure credential storage and actual user authentication.
+A production version would require secure credential storage and account authentication.
 
 ### Database Schema
 
@@ -437,21 +577,25 @@ This creates missing tables but does not automatically migrate existing database
 
 A fresh database is recommended for repeatable demonstration testing.
 
-### Integration Verification
+### Stock Issuing
 
-The final verification process includes checking Java compilation, database compatibility, automated tests and end-to-end CLI functionality.
+Stock issuing uses database transactions to update stock quantities, create docket lines and record stock history.
+
+Repeated issuing of the same docket is not currently blocked by a dedicated application-level safeguard. This is a known limitation for further improvement.
+
+### Further Improvements
+
+Potential improvements include stronger authentication, more automated end-to-end integration tests and additional safeguards for repeated stock issuing.
 
 ## 14. Assignment Submission
 
 ### Group Submission
 
-**Deadline: Friday, 20 November 2026 — Week 11**
+**Friday, 20 November 2026 — Week 11**
 
 Worth 40% of the module assessment.
 
-One ZIP submission is required per group.
-
-Required components:
+One ZIP submission per group containing:
 
 1. Project Plan
 2. Specification
@@ -460,36 +604,38 @@ Required components:
 5. Tests
 6. System Executable and GitHub Link
 
+The group submission has been prepared and submitted through Moodle.
+
 ### Individual Reflection
 
-**Deadline: Friday, 27 November 2026 — Week 12**
+**Friday, 27 November 2026 — Week 12**
 
 Worth 20% of the module assessment.
 
-Each team member submits an individual reflection.
+Each team member submits their own reflection.
 
 ## 15. Final Submission Checklist
 
 - [x] Shared GitHub repository established.
 - [x] Project plan and user stories created.
-- [x] Core Wave 1 modules developed.
-- [x] Billing module implemented.
-- [x] Delivery Dockets and Reporting implemented.
-- [x] MainMenu integrated.
+- [x] Core Wave 1 modules integrated.
+- [x] Billing module integrated.
+- [x] Delivery Dockets and Reporting integrated.
+- [x] Delivery Recording integrated.
+- [x] Stock and Delivery History modules integrated.
+- [x] MainMenu with eight sections completed.
 - [x] Shared database structure prepared.
 - [x] Demonstration data prepared.
-- [x] Integration PR #8 merged into master.
-- [ ] Verify final Wave 2 integration.
-- [ ] Complete final regression testing.
-- [ ] Complete end-to-end UAT.
-- [ ] Confirm final documentation and test evidence.
-- [ ] Build and test the executable JAR.
-- [ ] Prepare the group submission ZIP.
-- [ ] Submit the group assignment.
-- [ ] Submit individual reflections.
+- [x] JUnit regression testing: 226 tests passed.
+- [x] MySQL integration scenarios verified.
+- [x] Runnable JAR built and tested.
+- [x] Final integration PR #9 merged into master.
+- [x] Project documentation and UAT evidence included.
+- [x] Group assignment submitted through Moodle.
+- [ ] Individual reflections — Week 12.
 
 ---
 
-**Last reviewed: 19 November 2026**
+**Last updated: 20 November 2026**
 
-This README documents the project's structure, development approach, team responsibilities and integration process. Final test results and submission status should be updated after the last integration and verification.
+This README documents the completed group integration, development process, team responsibilities, test results and submission structure.
