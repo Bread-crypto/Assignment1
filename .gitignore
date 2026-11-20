@@ -1,13 +1,16 @@
+# Build files
 bin/
 *.class
+
+# Eclipse local files
 .classpath
 .project
 .settings/
 .metadata/
 
-# generated bill files
+# Generated application files
 bill_*.txt
-
-# Claude app output folder
-Claude outputs/
 dockets/
+
+# Local output folders
+*outputs/
