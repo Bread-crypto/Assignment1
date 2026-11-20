@@ -46,6 +46,10 @@ public class Publication {
                 || !verifyPublicationPrice(price) || !verifyStockQuantity(quantity)) {
             return false;
         }
+        if (publicationName != null
+                && publicationName.equalsIgnoreCase(name.trim())) {
+            return false;
+        }
         publicationName = name.trim();
         publicationType = type.trim().toUpperCase();
         publicationPrice = price;
